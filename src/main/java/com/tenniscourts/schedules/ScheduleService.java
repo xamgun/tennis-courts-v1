@@ -19,13 +19,14 @@ public class ScheduleService {
 
     private final TennisCourtRepository tennisCourtRepository;
 
-    public ScheduleDTO addSchedule(Long tennisCourtId, CreateScheduleRequestDTO createScheduleRequestDTO) {
-        TennisCourt tennisCourt = tennisCourtRepository.findById(tennisCourtId).orElse(null);
+    public ScheduleDTO addSchedule(CreateScheduleRequestDTO createScheduleRequestDTO) {
+        TennisCourt tennisCourt = tennisCourtRepository.findById(createScheduleRequestDTO.getTennisCourtId()).orElse(null);
         if (tennisCourt == null)
             throw new EntityNotFoundException("Tennis Court not found.");
-//        Schedule schedule = new Schedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO.getStartDateTime());
-//        schedule = scheduleMapper.
-        return null;
+        LocalDateTime start = createScheduleRequestDTO.getStartDateTime();
+        LocalDateTime end = start.plusMinutes(60L);
+        Schedule schedule = new Schedule(tennisCourt, start, end, null);
+        return scheduleMapper.map(scheduleRepository.saveAndFlush(schedule));
     }
 
     public List<ScheduleDTO> findSchedulesByDates(LocalDateTime startDate, LocalDateTime endDate) {

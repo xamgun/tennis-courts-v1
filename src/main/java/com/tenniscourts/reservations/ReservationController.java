@@ -40,6 +40,9 @@ public class ReservationController extends BaseRestController {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
+    @ApiOperation(value = "rescheduleReservation")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = ReservationDTO.class) })
+    @GetMapping(value = "/reschedule/{reservationId}/{scheduleId}")
     public ResponseEntity<ReservationDTO> rescheduleReservation(Long reservationId, Long scheduleId) {
         return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
     }

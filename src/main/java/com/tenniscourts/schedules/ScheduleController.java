@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +30,15 @@ public class ScheduleController extends BaseRestController {
     @ApiResponses(value = { @ApiResponse(code = 201, message = "Created", response = ScheduleDTO.class)})
     @PostMapping
     public ResponseEntity<ScheduleDTO> addScheduleTennisCourt(@RequestBody CreateScheduleRequestDTO createScheduleRequestDTO) {
-        return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO.getTennisCourtId(), createScheduleRequestDTO).getId())).build();
+        return ResponseEntity.created(locationByEntity(scheduleService.addSchedule(createScheduleRequestDTO).getId())).build();
     }
 
-    //TODO: implement rest and swagger
-    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(LocalDate startDate,
-                                                                  LocalDate endDate) {
+    @ApiOperation(value = "find schedules by dates")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = ScheduleDTO.class)})
+    @GetMapping(value = "/{startDate}/{endDate}")
+    public ResponseEntity<List<ScheduleDTO>> findSchedulesByDates(
+            @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
+            @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate) {
         return ResponseEntity.ok(scheduleService.findSchedulesByDates(LocalDateTime.of(startDate, LocalTime.of(0, 0)), LocalDateTime.of(endDate, LocalTime.of(23, 59))));
     }
 

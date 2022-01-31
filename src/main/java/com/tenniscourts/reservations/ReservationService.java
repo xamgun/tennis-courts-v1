@@ -83,6 +83,14 @@ public class ReservationService {
             return reservation.getValue();
         }
 
+        if (hours >= 12 && hours < 24) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.75));
+        }
+
+        if (hours >= 2 && hours < 12) {
+            return reservation.getValue().multiply(BigDecimal.valueOf(0.50));
+        }
+
         return BigDecimal.ZERO;
     }
 
